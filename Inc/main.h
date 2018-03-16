@@ -45,6 +45,9 @@
 
 /* USER CODE BEGIN Includes */
 
+#include "duk_config.h"
+#include "duktape.h"
+
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
