@@ -9,19 +9,6 @@
 
 <filestoremove>
     <file>
-    <name>../Src/usb_host.c</name>
-    <name>../Src/usbh_conf.c</name>
-    <name>../Src/usbh_platform.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ioreq.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_core.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ctlreq.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_ioreq.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Core/Src/usbh_pipes.c</name>
-    <name>../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c</name>
     </file>
 </filestoremove>
 
@@ -30,8 +17,6 @@
 	   <include></include>
     </Aincludes>
 	<Cincludes>
-	   		<include>../Middlewares/ST/STM32_USB_Host_Library/Core/Inc</include>
-	   		<include>../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc</include>
     </Cincludes>
 </inctoremove>
 

@@ -51,6 +51,8 @@ I2S_HandleTypeDef hi2s3;
 
 SPI_HandleTypeDef hspi1;
 
+UART_HandleTypeDef huart2;
+
 HCD_HandleTypeDef hhcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
@@ -71,12 +73,29 @@ static void MX_SPI1_Init(void);
 
 static void MX_USB_OTG_FS_HCD_Init(void);
 
+static void MX_USART2_UART_Init(void);
+
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+static duk_ret_t native_sleep(duk_context *ctx) {
+    duk_int32_t ms = duk_to_int32(ctx, 0);
+    HAL_Delay((uint32_t) ms);
+    return 0;
+}
+
+static duk_ret_t native_led_on(duk_context *ctx) {
+    HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_SET);
+    return 0;
+}
+
+static duk_ret_t native_led_off(duk_context *ctx) {
+    HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_RESET);
+    return 0;
+}
 
 /* USER CODE END 0 */
 
@@ -112,10 +131,30 @@ int main(void) {
     MX_I2S3_Init();
     MX_SPI1_Init();
     MX_USB_OTG_FS_HCD_Init();
+    MX_USART2_UART_Init();
     /* USER CODE BEGIN 2 */
 
     duk_context *ctx = duk_create_heap_default();
-    duk_eval_string(ctx, "1+2");
+
+    duk_push_c_function(ctx, native_sleep, 1 /*nargs*/);
+    duk_put_global_string(ctx, "sleep");
+
+    duk_push_c_function(ctx, native_led_on, 0);
+    duk_put_global_string(ctx, "ledOn");
+
+    duk_push_c_function(ctx, native_led_off, 0);
+    duk_put_global_string(ctx, "ledOff");
+
+    duk_eval_string(ctx, "(function(){"
+            "var timeTest = 400 + 100;"
+            "while(true){"
+            "ledOn();"
+            "sleep(timeTest);"
+            "ledOff();"
+            "sleep(timeTest);"
+            "}"
+            "})()");
+
     duk_destroy_heap(ctx);
 
     /* USER CODE END 2 */
@@ -128,7 +167,6 @@ int main(void) {
 
         /* USER CODE BEGIN 3 */
 
-        HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_SET);
         HAL_Delay(500);
         HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_RESET);
         HAL_Delay(500);
@@ -252,6 +290,23 @@ static void MX_SPI1_Init(void) {
     hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     hspi1.Init.CRCPolynomial = 10;
     if (HAL_SPI_Init(&hspi1) != HAL_OK) {
+        _Error_Handler(__FILE__, __LINE__);
+    }
+
+}
+
+/* USART2 init function */
+static void MX_USART2_UART_Init(void) {
+
+    huart2.Instance = USART2;
+    huart2.Init.BaudRate = 115200;
+    huart2.Init.WordLength = UART_WORDLENGTH_8B;
+    huart2.Init.StopBits = UART_STOPBITS_1;
+    huart2.Init.Parity = UART_PARITY_NONE;
+    huart2.Init.Mode = UART_MODE_TX_RX;
+    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_UART_Init(&huart2) != HAL_OK) {
         _Error_Handler(__FILE__, __LINE__);
     }
 
